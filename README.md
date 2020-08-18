@@ -89,31 +89,36 @@ JavaServiceTaskBuilder.builder().id("sendRejectionMail").name("Send out rejectio
 
 #### json属性说明
 * process(process为流程定义的根节点，必传)
+
 |属性|含义|类型|是否必传|
 | ------------ | ------------ |
 |id||String|是|
-|name||String||
+|name||String|否|
 
 * startEvent(开始事件)
+
 |属性|含义|类型|是否必传|
 | ------------ | ------------ |
 |id||String|是|
-|name||String||
-|startEventType||枚举||
+|name||String|否|
+|startEventType||枚举(noneStartEvent:空启动事件，timeStartEvent:定时启动事件)|否|
 
 * endEvent(结束事件)
+
 |属性|含义|类型|是否必传|
 | ------------ | ------------ |
 |id||String|是|
-|name||String||
+|name||String|否|
 
 * exclusiveGateway(排他网关)
+
 |属性|含义|类型|是否必传|
 | ------------ | ------------ |
 |id||String|是|
-|name||String||
+|name||String|否|
 
 * conditionalSequenceFlow(条件顺序流)
+
 |属性|含义|类型|是否必传|
 | ------------ | ------------ |
 |id||String|是|
@@ -122,6 +127,7 @@ JavaServiceTaskBuilder.builder().id("sendRejectionMail").name("Send out rejectio
 |conditionExpression||String|是|
 
 * noneSequenceFlow(空顺序流)
+
 |属性|含义|类型|是否必传|
 | ------------ | ------------ |
 |id||String|是|
@@ -129,26 +135,28 @@ JavaServiceTaskBuilder.builder().id("sendRejectionMail").name("Send out rejectio
 |targetRef||String|是|
 
 * javaServiceTask(java服务任务)
+
 |属性|含义|类型|是否必传|
 | ------------ | ------------ |
 |id||String|是|
-|name||String||
-|fullyQualifiedClassname||String||
-|delegateExpression|一个实现了JavaDelegate接口的bean，定义在Spring容器中|String||
-|expression|指定服务的表达式|String||
-|fieldMapList|为逻辑实现类设置固定属性值|List<Map<String, String>>||
-|expressionFieldMapList|为逻辑实现类设置动态属性值|List<Map<String, String>>||
-|resultVariable|将任务结果值设置为流程变量|String||
+|name||String|否|
+|fullyQualifiedClassname||String|否|
+|delegateExpression|一个实现了JavaDelegate接口的bean，定义在Spring容器中|String|否|
+|expression|指定服务的表达式|String|否|
+|fieldMapList|为逻辑实现类设置固定属性值|List<Map<String, String&gt;&gt;|否|
+|expressionFieldMapList|为逻辑实现类设置动态属性值|List<Map<String, String&gt;&gt;|否|
+|resultVariable|将任务结果值设置为流程变量|String|否|
 
 * userTask(用户任务节点)
+
 |属性|含义|类型|是否必传|
 | ------------ | ------------ |
 |id||String|是|
-|name||String||
-|document||String||
-|assignee|办理人|String||
-|candidateUsers|候选用户|String||
-|candidateGroups|候选组|String||
+|name||String|否|
+|document||String|否|
+|assignee|办理人|String|否|
+|candidateUsers|候选用户|String|否|
+|candidateGroups|候选组|String|否|
 
 示例：
 ```java
@@ -156,3 +164,8 @@ JavaServiceTaskBuilder.builder().id("sendRejectionMail").name("Send out rejectio
 Document document = bpmnXmlUtils.convertJson2Document("{\"process\":{\"id\":\"processId\",\"name\":\"processName\"},\"startEvent\":{\"id\":\"startEventId\",\"name\":\"startEventName\",\"startEventType\":\"noneStartEvent\"}}\n");
 bpmnXmlUtils.generateBpmnXmlFile(path, "test5.xml", document);
 ```
+
+#### ToDo
+1. 丰富更多组建
+2. 丰富文档
+3. 优化代码实现
