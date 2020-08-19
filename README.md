@@ -90,6 +90,13 @@ JavaServiceTaskBuilder.builder().id("sendRejectionMail").name("Send out rejectio
 #### json属性说明
 * process(process为流程定义的根节点，必传)
 
+  | 属性 | 含义 | 类型   | 是否必传 |
+  | ---- | ---- | ------ | -------- |
+  | id   |      | String | 是       |
+  | Name |      | String | 是       |
+
+  
+
 | 属性 | 含义 | 类型   | 是否必传 |
 | ---- | ---- | ------ | -------- |
 | id   |      | String | 是       |
