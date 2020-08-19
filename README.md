@@ -95,20 +95,13 @@ JavaServiceTaskBuilder.builder().id("sendRejectionMail").name("Send out rejectio
   | id   |      | String | 是       |
   | Name |      | String | 是       |
 
-  
-
-| 属性 | 含义 | 类型   | 是否必传 |
-| ---- | ---- | ------ | -------- |
-| id   |      | String | 是       |
-| name |      | String | 否       |
-
 * startEvent(开始事件)
 
-| 属性           | 含义 | 类型                                                         | 是否必传 |
-| -------------- | ---- | ------------------------------------------------------------ | -------- |
-| id             |      | String                                                       | 是       |
-| name           |      | String                                                       | 否       |
-| startEventType |      | 枚举(noneStartEvent:空启动事件，timeStartEvent:定时启动事件) | 否       |
+  | 属性           | 含义 | 类型                                                         | 是否必传 |
+  | -------------- | ---- | ------------------------------------------------------------ | -------- |
+  | id             |      | String                                                       | 是       |
+  | name           |      | String                                                       | 是       |
+  | startEventType |      | 枚举(noneStartEvent:空启动事件，timeStartEvent:定时启动事件) | 否       |
 
 * endEvent(结束事件)
 
