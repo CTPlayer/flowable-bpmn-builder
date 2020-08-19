@@ -29,6 +29,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * @ClassName BpmnXmlUtils
@@ -39,8 +42,61 @@ import java.util.Map;
  **/
 @Component
 public class BpmnXmlUtils {
-    private final String path = "";
+    // ToDo:把path暴露为可配置的属性
+///    private final String path = "";
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
+    private static final Map<String, BiConsumer<String, BpmnXmlBuilder>> builderMap = new HashMap<String, BiConsumer<String, BpmnXmlBuilder>>(){{
+        put(BuilderType.startEvent.name(), (jsonStr, bpmnXmlBuilder) -> {
+            try {
+                bpmnXmlBuilder.addStartEvent(objectMapper.readValue(jsonStr, StartEventBuilder.class));
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+        });
+        put(BuilderType.endEvent.name(), (jsonStr, bpmnXmlBuilder) -> {
+            try {
+                bpmnXmlBuilder.addEndEvent(objectMapper.readValue(jsonStr, EndEventBuilder.class));
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+        });
+        put(BuilderType.exclusiveGateway.name(), (jsonStr, bpmnXmlBuilder) -> {
+            try {
+                bpmnXmlBuilder.addExclusiveGateway(objectMapper.readValue(jsonStr, ExclusiveGatewayBuilder.class));
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+        });
+        put(BuilderType.conditionalSequenceFlow.name(), (jsonStr, bpmnXmlBuilder) -> {
+            try {
+                bpmnXmlBuilder.addConditionalSequenceFlow(objectMapper.readValue(jsonStr, ConditionalSequenceFlowBuilder.class));
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+        });
+        put(BuilderType.noneSequenceFlow.name(), (jsonStr, bpmnXmlBuilder) -> {
+            try {
+                bpmnXmlBuilder.addNoneSequenceFlow(objectMapper.readValue(jsonStr, NoneSequenceFlowBuilder.class));
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+        });
+        put(BuilderType.javaServiceTask.name(), (jsonStr, bpmnXmlBuilder) -> {
+            try {
+                bpmnXmlBuilder.addJavaServiceTask(objectMapper.readValue(jsonStr, JavaServiceTaskBuilder.class));
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+        });
+        put(BuilderType.userTask.name(), (jsonStr, bpmnXmlBuilder) -> {
+            try {
+                bpmnXmlBuilder.addUserTask(objectMapper.readValue(jsonStr, UserTaskBuilder.class));
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+        });
+    }};
 
     /**
      * 生成BpmnXml文件
@@ -101,6 +157,7 @@ public class BpmnXmlUtils {
         return processValidator.validate(generateBpmnModel(document));
     }
 
+
     /**
      * 通过约定json构建Document
      * @param json
@@ -115,6 +172,7 @@ public class BpmnXmlUtils {
         try {
             jsonMap = objectMapper.readValue(json, Map.class);
             // 解析json构造Document
+            // 需要先解析构造process节点，其他节点都是process的子节点
             if (jsonMap.containsKey(BuilderType.process.name())) {
                 String jsonStr = objectMapper.writeValueAsString(jsonMap.get(BuilderType.process.name()));
                 bpmnXmlBuilder.addProcess(objectMapper.readValue(jsonStr, ProcessBuilder.class));
@@ -123,21 +181,9 @@ public class BpmnXmlUtils {
             }
             jsonMap.forEach((k, v) -> {
                 try {
-                    String jsonStr = objectMapper.writeValueAsString(v);
-                    if (BuilderType.startEvent.name().equals(k)) {
-                        bpmnXmlBuilder.addStartEvent(objectMapper.readValue(jsonStr, StartEventBuilder.class));
-                    } else if (BuilderType.endEvent.name().equals(k)) {
-                        bpmnXmlBuilder.addEndEvent(objectMapper.readValue(jsonStr, EndEventBuilder.class));
-                    } else if (BuilderType.exclusiveGateway.name().equals(k)) {
-                        bpmnXmlBuilder.addExclusiveGateway(objectMapper.readValue(jsonStr, ExclusiveGatewayBuilder.class));
-                    } else if (BuilderType.conditionalSequenceFlow.name().equals(k)) {
-                        bpmnXmlBuilder.addConditionalSequenceFlow(objectMapper.readValue(jsonStr, ConditionalSequenceFlowBuilder.class));
-                    } else if (BuilderType.noneSequenceFlow.name().equals(k)) {
-                        bpmnXmlBuilder.addNoneSequenceFlow(objectMapper.readValue(jsonStr, NoneSequenceFlowBuilder.class));
-                    } else if (BuilderType.javaServiceTask.name().equals(k)) {
-                        bpmnXmlBuilder.addJavaServiceTask(objectMapper.readValue(jsonStr, JavaServiceTaskBuilder.class));
-                    } else if (BuilderType.userTask.name().equals(k)) {
-                        bpmnXmlBuilder.addUserTask(objectMapper.readValue(jsonStr, UserTaskBuilder.class));
+                    if (builderMap.containsKey(k)) {
+                        String jsonStr = objectMapper.writeValueAsString(v);
+                        builderMap.get(k).accept(jsonStr, bpmnXmlBuilder);
                     }
                 } catch (JsonProcessingException e) {
                         e.printStackTrace();
