@@ -55,7 +55,22 @@ BpmnXmlUtils.generateBpmnXmlFile(path, "test.xml", bpmnXmlBuilder.getDocument())
 </definitions>
 ```
 
+### 使用方式
+
+clone 项目执行 maven:install，在自己项目中配置以下信息引入（gradle同理）
+
+```xml
+<dependency>
+  <groupId>com.cheng</groupId>
+  <artifactId>flowableBpmnBuilder-spring-boot-starter</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+</dependency>
+```
+
+或者自己导入项目下flowableBpmnBuilder-spring-boot-starter-0.1.jar
+
 ### 使用说明
+
 #### 目前支持的bpmn2.0结构
 * 启动事件
 ```java
