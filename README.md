@@ -181,6 +181,6 @@ bpmnXmlUtils.generateBpmnXmlFile(path, "test5.xml", document);
 ```
 
 #### ToDo
-1. 丰富更多组建
+1. 丰富组件
 2. 丰富文档
 3. 优化代码实现
